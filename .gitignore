@@ -1,0 +1,94 @@
+# ===========================
+# Backend - Spring Boot / Gradle
+# ===========================
+
+# Gradle
+suwanee-back/.gradle/
+suwanee-back/build/
+suwanee-back/!gradle/wrapper/gradle-wrapper.jar
+
+# IDE - IntelliJ IDEA
+suwanee-back/.idea/
+suwanee-back/*.iml
+suwanee-back/*.ipr
+suwanee-back/*.iws
+suwanee-back/out/
+
+# IDE - Eclipse
+suwanee-back/.classpath
+suwanee-back/.project
+suwanee-back/.settings/
+
+# IDE - VS Code
+suwanee-back/.vscode/
+
+# Logs
+suwanee-back/*.log
+suwanee-back/logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+suwanee-back/.env
+suwanee-back/.env.local
+
+# ===========================
+# Frontend - React / Vite / Node
+# ===========================
+
+# Dependencies
+suwanee-front/node_modules/
+
+# Build output
+suwanee-front/dist/
+suwanee-front/build/
+
+# Vite cache
+suwanee-front/.vite/
+
+# IDE - VS Code
+suwanee-front/.vscode/
+
+# Logs
+suwanee-front/*.log
+suwanee-front/npm-debug.log*
+suwanee-front/yarn-debug.log*
+suwanee-front/yarn-error.log*
+suwanee-front/pnpm-debug.log*
+
+# Environment files
+suwanee-front/.env
+suwanee-front/.env.local
+suwanee-front/.env.*.local
+
+# TypeScript cache
+suwanee-front/*.tsbuildinfo
+
+# Testing
+suwanee-front/coverage/
+
+# ===========================
+# Global / Shared
+# ===========================
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.swp
+*.swo
+*~
