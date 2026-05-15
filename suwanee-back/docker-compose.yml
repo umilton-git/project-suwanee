@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: suwanee-db
+    environment:
+      POSTGRES_DB: suwanee
+      POSTGRES_USER: suwanee_user
+      POSTGRES_PASSWORD: suwanee_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - suwanee-db-data:/var/lib/postgresql/data
+
+volumes:
+  suwanee-db-data:
