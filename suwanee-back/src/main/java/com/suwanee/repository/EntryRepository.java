@@ -15,6 +15,8 @@ public interface EntryRepository extends JpaRepository<Entry, UUID> {
 
     Optional<Entry> findByIdAndTopicId(UUID id, UUID topicId);
 
+    Optional<Entry> findByIdAndTopicUserId(UUID id, UUID userId);
+
     long countByTopicId(UUID topicId);
 
     boolean existsByIdAndTopicId(UUID id, UUID topicId);

@@ -43,5 +43,24 @@ public class EntryService {
         return entryRepository.findByTopicIdOrderByCreatedAtDesc(topicId);
     }
 
-    public Entry updateEntry(UUID entryId, UUID userId)
+    public Entry updateEntry(UUID entryId, UUID userId, UpdateEntryRequest request) {
+
+        Entry entry = entryRepository.findByIdAndTopicUserId(entryId, userId)
+                .orElseThrow(() -> new RuntimeException("Entry not found"));
+
+        request.getLearned().ifPresent(entry::setLearned);
+        request.getInsights().ifPresent(entry::setInsights);
+        request.getQuestions().ifPresent(entry::setQuestions);
+        request.getConfidence().ifPresent(entry::setConfidence);
+
+        return entryRepository.save(entry);
+    }
+
+    public void deleteEntry(UUID entryId, UUID userId) {
+
+        Entry entry = entryRepository.findByIdAndTopicUserId(entryId, userId)
+                .orElseThrow(() -> new RuntimeException("Entry not found"));
+
+        entryRepository.delete(entry);
+    }
 }
