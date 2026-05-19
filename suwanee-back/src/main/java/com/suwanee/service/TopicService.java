@@ -33,4 +33,27 @@ public class TopicService {
         return topicRepository.save(topic);
     }
 
+    public List<Topic> getTopicsForUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return topicRepository.findByUserId(userId);
+    }
+
+    public Topic updateTopic(UUID topicId, UUID userId, String name, String module) {
+        Topic topic = topicRepository.findByIdAndUserId(topicId, userId)
+                .orElseThrow(() -> new RuntimeException("Topic not found"));
+
+        if (name != null) topic.setName(name);
+        if (module != null) topic.setModule(module);
+
+        return topicRepository.save(topic);
+    }
+
+    public void deleteTopic(UUID topicId, UUID userId) {
+        Topic topic = topicRepository.findByIdAndUserId(topicId, userId)
+                .orElseThrow(() -> new RuntimeException("Topic not found"));
+
+        topicRepository.delete(topic);
+    }
 }
