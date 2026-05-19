@@ -4,6 +4,9 @@ import com.suwanee.model.entity.Topic;
 import com.suwanee.model.entity.User;
 import com.suwanee.repository.TopicRepository;
 import com.suwanee.repository.UserRepository;
+import com.suwanee.dto.request.CreateTopicRequest;
+import com.suwanee.dto.request.UpdateTopicRequest;
+import com.suwanee.dto.response.TopicResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,36 +21,39 @@ import java.util.UUID;
 public class TopicService {
 
     private final TopicRepository topicRepository;
-    public final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public Topic createTopic(UUID userId, String name, String module) {
+    public TopicResponse createTopic(UUID userId, CreateTopicRequest request) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Topic topic = new Topic();
         topic.setUser(user);
-        topic.setName(name);
-        topic.setModule(module);
+        topic.setName(request.getName());
+        topic.setModule(request.getModule());
 
-        return topicRepository.save(topic);
+        return TopicResponse.from(topicRepository.save(topic));
     }
 
-    public List<Topic> getTopicsForUser(UUID userId) {
+    public List<TopicResponse> getTopicsForUser(UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return topicRepository.findByUserId(userId);
+        return topicRepository.findByUserId(userId)
+                .stream()
+                .map(TopicResponse::from)
+                .toList();
     }
 
-    public Topic updateTopic(UUID topicId, UUID userId, String name, String module) {
+    public TopicResponse updateTopic(UUID topicId, UUID userId, UpdateTopicRequest request) {
         Topic topic = topicRepository.findByIdAndUserId(topicId, userId)
                 .orElseThrow(() -> new RuntimeException("Topic not found"));
 
-        if (name != null) topic.setName(name);
-        if (module != null) topic.setModule(module);
+        request.getName().ifPresent(topic::setName);
+        request.getModule().ifPresent(topic::setModule);
 
-        return topicRepository.save(topic);
+        return TopicResponse.from(topicRepository.save(topic));
     }
 
     public void deleteTopic(UUID topicId, UUID userId) {

@@ -3,7 +3,8 @@ package com.suwanee.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
-import java.util.Optional;
+import jakarta.validation.constraints.NotBlank;
+
 
 @Getter
 @Setter
