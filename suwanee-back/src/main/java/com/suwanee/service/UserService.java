@@ -1,5 +1,9 @@
 package com.suwanee.service;
 
+import com.suwanee.dto.request.LoginRequest;
+import com.suwanee.dto.request.RegisterRequest;
+import com.suwanee.dto.response.AuthResponse;
+import com.suwanee.dto.response.UserResponse;
 import com.suwanee.model.entity.User;
 import com.suwanee.repository.UserRepository;
 import com.suwanee.security.JwtUtil;
@@ -10,9 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,21 +23,25 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public User createUser(String email, String password) {
+    public UserResponse createUser(RegisterRequest registerRequest) {
         User user = new User();
 
-        user.setEmail(email);
-        user.setPasswordHash(passwordEncoder.encode(password));
-        return userRepository.save(user);
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            throw new RuntimeException("Email already in use");
+        }
+
+        user.setEmail(registerRequest.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(registerRequest.getPassword()));
+        return UserResponse.from(userRepository.save(user));
     }
 
-    public String login (String email, String password) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email + " not found"));
+    public AuthResponse login (LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException(loginRequest.getEmail() + " not found"));
 
-        if (!passwordEncoder.matches(password, user.getPasswordHash())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
             throw new BadCredentialsException("Incorrect password");
         }
-        return jwtUtil.generateToken(user.getEmail());
+        return new AuthResponse(jwtUtil.generateToken(user.getEmail()));
     }
 }
