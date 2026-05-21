@@ -10,9 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, UUID> {
-
-    List<Topic> findByUserIdOrderByCreatedAtDesc(UUID userId);
-
     List<Topic> findByUserId(UUID userId);
 
     Optional<Topic> findByIdAndUserId(UUID id, UUID userId);
