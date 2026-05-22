@@ -9,10 +9,13 @@ import com.suwanee.repository.UserRepository;
 import com.suwanee.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +46,14 @@ public class UserService {
             throw new BadCredentialsException("Incorrect password");
         }
         return new AuthResponse(jwtUtil.generateToken(user.getEmail()));
+    }
+
+    public UUID getCurrentUserId() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId();
     }
 }
