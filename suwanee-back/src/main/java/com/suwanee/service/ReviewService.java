@@ -33,7 +33,11 @@ public class ReviewService {
 
         return reviewRepository.save(review);
     }
-    public List<Review> getReviews(UUID entryId) {
+    public List<Review> getReviewsForEntry(UUID topicId, UUID entryId) {
+
+        entryRepository.findByIdAndTopicUserId(entryId, topicId)
+                .orElseThrow(() -> new RuntimeException("Entry not found"));
+
         return reviewRepository.findByEntryIdOrderByCreatedAtDesc(entryId);
     }
 
