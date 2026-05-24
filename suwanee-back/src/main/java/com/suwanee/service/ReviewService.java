@@ -1,5 +1,6 @@
 package com.suwanee.service;
 
+import com.suwanee.dto.request.CreateReviewRequest;
 import com.suwanee.dto.request.UpdateReviewRequest;
 import com.suwanee.dto.response.ReviewResponse;
 import com.suwanee.model.entity.Entry;
@@ -23,7 +24,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final EntryRepository entryRepository;
 
-    public ReviewResponse createReview(UUID entryId, UUID userId) {
+    public ReviewResponse createReview(UUID entryId, UUID userId, CreateReviewRequest request) {
         Entry entry =  entryRepository.findByIdAndTopicUserId(entryId, userId)
                 .orElseThrow(() -> new RuntimeException("Entry not found"));
 
