@@ -1,5 +1,7 @@
 package com.suwanee.service;
 
+import com.suwanee.dto.request.UpdateReviewRequest;
+import com.suwanee.dto.response.ReviewResponse;
 import com.suwanee.model.entity.Entry;
 import com.suwanee.model.entity.Review;
 import com.suwanee.repository.EntryRepository;
@@ -21,7 +23,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final EntryRepository entryRepository;
 
-    public Review createReview(UUID entryId, UUID userId) {
+    public ReviewResponse createReview(UUID entryId, UUID userId) {
         Entry entry =  entryRepository.findByIdAndTopicUserId(entryId, userId)
                 .orElseThrow(() -> new RuntimeException("Entry not found"));
 
@@ -29,27 +31,33 @@ public class ReviewService {
         review.setEntry(entry);
         review.setDueAt(calculateDueAt(entry.getConfidence()));
 
-        return reviewRepository.save(review);
+        return ReviewResponse.from(reviewRepository.save(review));
     }
-    public List<Review> getReviewsForEntry(UUID entryId, UUID userId) {
+    public List<ReviewResponse> getReviewsForEntry(UUID entryId, UUID userId) {
         entryRepository.findByIdAndTopicUserId(entryId, userId)
                 .orElseThrow(() -> new RuntimeException("Entry not found"));
-        return reviewRepository.findByEntryIdOrderByCreatedAtDesc(entryId);
+        return reviewRepository.findByEntryIdOrderByCreatedAtDesc(entryId)
+                .stream()
+                .map(ReviewResponse::from)
+                .toList();
     }
 
-    public List<Review> getDueReviews(UUID entryId, UUID userId) {
+    public List<ReviewResponse> getDueReviews(UUID entryId, UUID userId) {
         entryRepository.findByIdAndTopicUserId(entryId, userId)
                 .orElseThrow(() -> new RuntimeException("Entry not found"));
-        return reviewRepository.findByEntryIdAndDueAtBefore(entryId, LocalDateTime.now());
+        return reviewRepository.findByEntryIdAndDueAtBefore(entryId, LocalDateTime.now())
+                .stream()
+                .map(ReviewResponse::from)
+                .toList();
     }
 
-    public Review updateReview(UUID reviewId, UUID entryId, String result, LocalDateTime dueAt) {
-       Review review = reviewRepository.findByIdAndEntryId(reviewId, entryId)
-               .orElseThrow(() -> new RuntimeException("Review not found"));
-       review.setResult(result);
-       review.setReviewedAt(LocalDateTime.now());
-       review.setDueAt(calculateNextDueAt(result, review.getEntry().getConfidence()));
-       return reviewRepository.save(review);
+    public ReviewResponse updateReview(UUID reviewId, UUID entryId, UpdateReviewRequest request) {
+        Review review = reviewRepository.findByIdAndEntryId(reviewId, entryId)
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+        review.setResult(request.getResult());
+        review.setReviewedAt(LocalDateTime.now());
+        review.setDueAt(calculateNextDueAt(request.getResult(), review.getEntry().getConfidence()));
+        return ReviewResponse.from(reviewRepository.save(review));
     }
 
     public void deleteReview(UUID reviewId, UUID entryId) {
