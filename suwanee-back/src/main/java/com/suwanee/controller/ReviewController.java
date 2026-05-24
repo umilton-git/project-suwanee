@@ -7,6 +7,7 @@ import com.suwanee.service.ReviewService;
 import com.suwanee.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class ReviewController {
     private final UserService userService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ReviewResponse createReview(@PathVariable UUID entryId, @Valid @RequestBody CreateReviewRequest request) {
         UUID userId = userService.getCurrentUserId();
         return reviewService.createReview(entryId, userId, request);

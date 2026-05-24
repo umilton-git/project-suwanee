@@ -7,6 +7,7 @@ import com.suwanee.service.EntryService;
 import com.suwanee.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class EntryController {
     private final UserService userService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public EntryResponse createEntry(@PathVariable UUID topicId, @Valid @RequestBody CreateEntryRequest createEntryRequest) {
         UUID userId = userService.getCurrentUserId();
         return entryService.createEntry(topicId, userId, createEntryRequest);
