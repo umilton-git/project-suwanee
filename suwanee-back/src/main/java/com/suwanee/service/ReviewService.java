@@ -32,7 +32,10 @@ public class ReviewService {
         review.setEntry(entry);
         review.setDueAt(calculateDueAt(entry.getConfidence()));
 
-        return ReviewResponse.from(reviewRepository.save(review));
+        Review saved = reviewRepository.save(review);
+        reviewRepository.flush();
+        return ReviewResponse.from(reviewRepository.findById(saved.getId())
+                .orElseThrow());
     }
     public List<ReviewResponse> getReviewsForEntry(UUID entryId, UUID userId) {
         entryRepository.findByIdAndTopicUserId(entryId, userId)
