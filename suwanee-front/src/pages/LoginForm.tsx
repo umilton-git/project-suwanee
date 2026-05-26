@@ -1,11 +1,10 @@
 import React from 'react';
-import { register } from '../../services/authService';
+import { login } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 
-const RegisterForm = () => {
+const LoginForm = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [confirmPassword, setConfirmPassword] = React.useState('');
     const [error, setError] = React.useState<string | null>(null);
     const [loading, setLoading] = React.useState(false);
 
@@ -22,18 +21,13 @@ const RegisterForm = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
-    try 
-    {
-        if (password !== confirmPassword) {
-        setError("Passwords do not match.");
-        setLoading(false);
-        return;
-}
-         await register(email, password);
+    try {
+         // Simulate API call
+         const token = await login(email, password);
+         localStorage.setItem('token', token);
          navigate('/dashboard');
         } catch (err) {
-            setError("Registration failed. Please check your credentials and try again.");
+            setError("Login failed. Please check your credentials and try again.");
         } finally {
             setLoading(false);
         }
@@ -41,7 +35,7 @@ const RegisterForm = () => {
 
     return (
         <div>
-            <h2>Register</h2>
+            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="email">Email</label>
@@ -63,23 +57,16 @@ const RegisterForm = () => {
                         onChange = {(e) => setPassword(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label htmlFor="confirmPassword">Confirm Password</label>
-                    <input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="Confirm your password"
-                        value={confirmPassword}
-                        onChange = {(e) => setConfirmPassword(e.target.value)}
-                    />
-                </div>
                 {error && <div style={{ color: 'red' }}>{error}</div>}
                 <button type="submit" disabled={loading}>
-                    {loading ? 'Registering...' : 'Register'}
+                    {loading ? 'Logging in...' : 'Login'}
                 </button>
             </form>
+            <div>
+                <p>Don't have an account? <a href="/register">Register here</a></p>
+            </div>
         </div>
     );
 };
 
-export default RegisterForm;
+export default LoginForm;
