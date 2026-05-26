@@ -1,5 +1,6 @@
 import React from 'react';
 import { login } from '../../services/authService';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const [email, setEmail] = React.useState('');
@@ -7,10 +8,12 @@ const LoginForm = () => {
     const [error, setError] = React.useState<string | null>(null);
     const [loading, setLoading] = React.useState(false);
 
+    const navigate = useNavigate();
+
     React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-        window.location.href = '/dashboard';
+        navigate('/dashboard');
         }
     }, []);
 
@@ -22,7 +25,7 @@ const LoginForm = () => {
          // Simulate API call
          const token = await login(email, password);
          localStorage.setItem('token', token);
-         window.location.href = '/dashboard';
+         navigate('/dashboard');
         } catch (err) {
             setError("Login failed. Please check your credentials and try again.");
         } finally {
