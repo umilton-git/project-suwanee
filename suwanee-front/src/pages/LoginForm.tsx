@@ -1,18 +1,18 @@
 import React from 'react';
 import { login } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LoginForm = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [error, setError] = React.useState<string | null>(null);
     const [loading, setLoading] = React.useState(false);
-
+    const { isAuthenticated, setToken } = useAuth();
     const navigate = useNavigate();
 
     React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
+    if (isAuthenticated) {
         navigate('/dashboard');
         }
     }, []);
@@ -24,7 +24,7 @@ const LoginForm = () => {
     try {
          // Simulate API call
          const token = await login(email, password);
-         localStorage.setItem('token', token);
+         setToken(token);
          navigate('/dashboard');
         } catch (err) {
             setError("Login failed. Please check your credentials and try again.");

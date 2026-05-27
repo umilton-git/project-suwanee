@@ -10,7 +10,7 @@ export type Topic = {
 };
 
 export const getTopics = async (): Promise<Topic[]> => {
-    const response = await apiClient('/topics');
+    const response = await apiClient('/api/topics');
     return response;
 };
 

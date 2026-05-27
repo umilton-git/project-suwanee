@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import TopicList from '../components/Topics/TopicList';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Dashboard = () => {
     return (
         <div>
             <h1>Dashboard</h1>
+            <TopicList />
             <button onClick={handleLogout}>Logout</button>
         </div>
     );
