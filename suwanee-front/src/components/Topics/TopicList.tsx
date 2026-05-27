@@ -1,11 +1,13 @@
 import React from 'react';
 import { getTopics, type Topic } from '../../services/topicService';
 import TopicForm from './TopicForm';
+import { useNavigate } from 'react-router-dom';
 
 const TopicList = () => {
     const [topics, setTopics] = React.useState<Topic[]>([]);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         const fetchTopics = async () => {
@@ -36,11 +38,15 @@ const TopicList = () => {
                 <p>No topics yet. Create one to get started.</p>
             )}
             {topics.map(topic => (
-                <div key={topic.id}>
-                    <h3>{topic.name}</h3>
-                    <p>{topic.module}</p>
-                </div>
-            ))}
+            <div
+                key={topic.id}
+                onClick={() => navigate(`/topics/${topic.id}`, { state: { topicName: topic.name } })}
+                style={{ cursor: 'pointer' }}
+            >
+                <h3>{topic.name}</h3>
+                <p>{topic.module}</p>
+            </div>
+        ))}
         </div>
     );
 };

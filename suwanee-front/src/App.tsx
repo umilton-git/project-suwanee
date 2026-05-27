@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './pages/LoginForm';
 import RegisterForm from './pages/RegisterForm';
 import Dashboard from './pages/Dashboard';
+import TopicPage from './pages/TopicPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 const App = () => {
@@ -12,6 +13,7 @@ const App = () => {
                 <Route path="/login" element={<LoginForm />} />
                 <Route path="/register" element={<RegisterForm />} />
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/topics/:topicId" element={<TopicPage />} />
                 <Route path="/" element={<Navigate to="/login" />} />
             </Routes>
         </BrowserRouter>
