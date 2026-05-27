@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const { setToken } = useAuth();
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        setToken(null);
         navigate('/login');
     };
 
