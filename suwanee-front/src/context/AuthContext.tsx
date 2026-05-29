@@ -8,6 +8,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(
         localStorage.getItem('token')
@@ -21,6 +22,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         setToken(newToken);
     };
+
+    React.useEffect(() => {
+        const handleLogout = () => {
+            setToken(null);
+            window.location.href = '/login';
+        };
+        window.addEventListener('auth:logout', handleLogout);
+        return () => window.removeEventListener('auth:logout', handleLogout);
+    }, []); 
 
     return (
         <AuthContext.Provider value={{
