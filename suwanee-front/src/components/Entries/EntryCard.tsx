@@ -1,5 +1,7 @@
 import React from 'react';
 import { type Entry } from '../../services/entryService';
+import { type Review } from '../../services/reviewService';
+import ReviewList from '../reviews/ReviewList';
 
 type EntryCardProps = {
     entry: Entry;
@@ -93,6 +95,11 @@ const EntryCard = ({ entry }: EntryCardProps) => {
                                 {entry.questions}
                             </div>
                         </>
+                    )}
+                    { expanded && (
+                        <div style={{ marginTop: '16px' }}>
+                            <ReviewList topicId={entry.topicId} entryId={entry.id} />
+                        </div>
                     )}
                 </div>
             )}
