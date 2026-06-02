@@ -15,7 +15,7 @@ export const apiClient = async (
         },
     });
 
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
         localStorage.removeItem('token');
         window.dispatchEvent(new Event('auth:logout'));
         throw new Error('Session expired');
